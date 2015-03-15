@@ -2952,6 +2952,15 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         }
 
         // Disconnect if we connected to ourself
+
+        if(pfrom->strSubVer.find("BitcoinFast") != std::string::npos)
+    {
+        printf("disconnecting BitcoinFast node!\n");
+        pfrom->Misbehaving(100);
+        pfrom->fDisconnect = true;
+        return false;
+    }
+    
         if (nNonce == nLocalHostNonce && nNonce > 1)
         {
             printf("connected to self at %s, disconnecting\n", pfrom->addr.ToString().c_str());
